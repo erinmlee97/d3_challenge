@@ -318,7 +318,8 @@ d3.csv("assets/data/data.csv").then(function(dData, err) {
             obeseLabel
                 .classed("active", false)
                 .classed("inactive", true);
-        } else if (chosenYAxis === "smokes"){
+        } 
+        else if (chosenYAxis === "smokes"){
             healthcareLabel
                 .classed("active", false)
                 .classed("inactive", true);
@@ -328,7 +329,8 @@ d3.csv("assets/data/data.csv").then(function(dData, err) {
             obeseLabel
                 .classed("active", false)
                 .classed("inactive", true);
-        } else {
+        } 
+        else {
             healthcareLabel
                 .classed("active", false)
                 .classed("inactive", true);
@@ -339,3 +341,15 @@ d3.csv("assets/data/data.csv").then(function(dData, err) {
                 .classed("active", true)
                 .classed("inactive", false);
         }
+
+        // Update circles with new y values.
+        circle = renderCircles(circlesGroup, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
+        // Update circles text with new values.
+        circleText = renderText(circleText, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
+        // Update tool tips with new info.
+        circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circle, circleText);
+    });
+    }).catch(function(err) {
+        console.log(err);
+    });
+}
