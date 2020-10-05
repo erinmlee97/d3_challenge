@@ -200,3 +200,49 @@ d3.csv("assets/data/data.csv").then(function(dData, err) {
 
     // Update tool tip function above csv import.
     var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circle, circleText);
+
+    // Add x label groups and labels.
+    var xLabelsGroup = chartGroup.append("g")
+        .attr("transform", `translate(${width / 2}, ${height + 20})`);
+    var povertyLabel = xLabelsGroup.append("text")
+        .attr("x", 0)
+        .attr("y", 20)
+        .attr("value", "poverty") // value to grab for event listener
+        .classed("active", true)
+        .text("In Poverty (%)");
+    var ageLabel = xLabelsGroup.append("text")
+        .attr("x", 0)
+        .attr("y", 40)
+        .attr("value", "age") // value to grab for event listener
+        .classed("inactive", true)
+        .text("Age (Median)");
+    var incomeLabel = xLabelsGroup.append("text")
+        .attr("x", 0)
+        .attr("y", 60)
+        .attr("value", "income") // value to grab for event listener
+        .classed("inactive", true)
+        .text("Household Income (Median)");
+    // Add y labels group and labels.
+    var yLabelsGroup = chartGroup.append("g")
+        .attr("transform", "rotate(-90)");
+    var healthcareLabel = yLabelsGroup.append("text")
+        .attr("x", 0 - (height / 2))
+        .attr("y", 40 - margin.left)
+        .attr("dy", "1em")
+        .attr("value", "healthcare")
+        .classed("active", true)
+        .text("Lacks Healthcare (%)");
+    var smokesLabel = yLabelsGroup.append("text")
+        .attr("x", 0 - (height / 2))
+        .attr("y", 20 - margin.left)
+        .attr("dy", "1em")
+        .attr("value", "smokes")
+        .classed("inactive", true)
+        .text("Smokes (%)");
+    var obeseLabel = yLabelsGroup.append("text")
+        .attr("x", 0 - (height / 2))
+        .attr("y", 0 - margin.left)
+        .attr("dy", "1em")
+        .attr("value", "obesity")
+        .classed("inactive", true)
+        .text("Obese (%)");
