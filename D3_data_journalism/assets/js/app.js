@@ -40,3 +40,14 @@ function xScale(dData, chosenXAxis) {
   
     return xLinearScale;
 }
+
+// function used for updating xAxis var upon click on axis label
+function renderAxes(newXScale, xAxis) {
+    var bottomAxis = d3.axisBottom(newXScale);
+  
+    xAxis.transition()
+      .duration(1000)
+      .call(bottomAxis);
+  
+    return xAxis;
+  }
