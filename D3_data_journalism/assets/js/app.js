@@ -31,7 +31,7 @@ var chosenXAxis = "poverty";
 var chosenYAxis = "healthcare";
 
 // function used for updating x-scale var upon click on axis label
-function xScale(dData, chosenXAxis) {
+function xScale(dData, chosenXAxis, width) {
     // create scales
     var xLinearScale = d3.scaleLinear()
       .domain([d3.min(dData, d => d[chosenXAxis]) * 0.8,
@@ -53,6 +53,24 @@ function renderAxes(newXScale, xAxis) {
     return xAxis;
   }
 
+  // Function used for updating y-scale var upon click on axis label.
+function yScale(data, chosenYAxis, height) {
+    // Create scales.
+    var yLinearScale = d3.scaleLinear()
+        .domain([d3.min(data, d => d[chosenYAxis]) * .8,
+            d3.max(data, d => d[chosenYAxis]) * 1.2])
+        .range([height, 0]);
+    return yLinearScale;
+}
+// Function used for updating yAxis var upon click on axis label.
+function renderYAxes(newYScale, yAxis) {
+    var leftAxis = d3.axisLeft(newYScale);
+    yAxis.transition()
+        .duration(1000)
+        .call(leftAxis);
+    return yAxis;
+}
+
 // function used for updating circles group with a transition to
 // new circles
 function renderCircles(circlesGroup, newXScale, chosenXAxis) {
@@ -65,7 +83,7 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis) {
   }
 
   // function used for updating circles group with new tooltip
-function updateToolTip(chosenXAxis, circlesGroup) {
+function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, textGroup) {
 
     var xlabel;
     // Conditional x axis
@@ -112,13 +130,32 @@ function updateToolTip(chosenXAxis, circlesGroup) {
   
     circlesGroup.call(toolTip);
   
-    circlesGroup.on("mouseover", function(data) {
-      toolTip.show(data);
-    })
-      // onmouseout event
-      .on("mouseout", function(data, index) {
-        toolTip.hide(data);
-      });
-  
+    circlesGroup
+        .on("mouseover", function(data) {
+            toolTip.show(data, this);
+        })
+        .on("mouseout", function(data) {
+            toolTip.hide(data);
+        });
+    textGroup
+        .on("mouseover", function(data) {
+            toolTip.show(data, this);
+        })
+        .on("mouseout", function(data) {
+            toolTip.hide(data);
+        });
     return circlesGroup;
-  }
+}
+
+// Retrieve data from the CSV file and execute everything below
+d3.csv("assets/data/data.csv").then(function(dData, err) {
+    if (err) throw err;
+    // Parse data.
+    dData.forEach(function(data) {
+        data.poverty = +data.poverty;
+        data.healthcare = +data.healthcare;
+        data.age = +data.age;
+        data.smokes = +data.smokes;
+        data.income = +data.income;
+        data.obesity = +data.obesity;
+    });
