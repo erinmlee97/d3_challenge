@@ -159,3 +159,41 @@ d3.csv("assets/data/data.csv").then(function(dData, err) {
         data.income = +data.income;
         data.obesity = +data.obesity;
     });
+
+    // Create x/y linear scales.
+    var xLinearScale = xScale(dData, chosenXAxis, width);
+    var yLinearScale = yScale(dData, chosenYAxis, height);
+    // Create initial axis functions.
+    var bottomAxis =d3.axisBottom(xLinearScale);
+    var leftAxis = d3.axisLeft(yLinearScale);
+
+    // Append x-axis
+    var xAxis = chartGroup.append("g")
+        .attr("transform", `translate(0, ${height})`)
+        .call(bottomAxis);
+
+    // Append y axis.
+    var yAxis = chartGroup.append("g")
+        .call(leftAxis);
+
+    // Set data used for circles.
+    var circlesGroup = chartGroup.selectAll("circle")
+        .data(dData);
+
+    // Bind data.
+    var elemEnter = circlesGroup.enter();
+
+    // Create circles.
+    var circle = elemEnter.append("circle")
+    .attr("cx", d => xLinearScale(d[chosenXAxis]))
+    .attr("cy", d => yLinearScale(d[chosenYAxis]))
+    .attr("r", 15)
+    .classed("stateCircle", true);
+    
+    // Create circle text.
+    var circleText = elemEnter.append("text")            
+        .attr("x", d => xLinearScale(d[chosenXAxis]))
+        .attr("y", d => yLinearScale(d[chosenYAxis]))
+        .attr("dy", ".35em") 
+        .text(d => d.abbr)
+        .classed("stateText", true);
