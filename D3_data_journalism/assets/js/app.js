@@ -17,7 +17,7 @@ var height = svgHeight - margin.top - margin.bottom;
 
 // Create a svg container
 var svg = d3
-  .select("scatter")
+  .select("#scatter")
   .append("svg")
   .attr("width", svgWidth)
   .attr("height", svgHeight);
@@ -28,6 +28,7 @@ var chartGroup = svg.append("g")
 
 // Initial Params
 var chosenXAxis = "poverty";
+var chosenYAxis = "healthcare";
 
 // function used for updating x-scale var upon click on axis label
 function xScale(dData, chosenXAxis) {
@@ -66,24 +67,48 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis) {
   // function used for updating circles group with new tooltip
 function updateToolTip(chosenXAxis, circlesGroup) {
 
-    var label;
-  
+    var xlabel;
+    // Conditional x axis
     if (chosenXAxis === "poverty") {
-      label = "Poverty:";
+        xlabel = "Poverty:";
     }
     else if (chosenXAxis === "age"){
-        label = "Age:";
+        xlabel = "Age:";
     }
     else {
-      label = "Household Income:";
+        xlabel = "Household Income:";
+    }
+    var ylabel;
+    // Conditional y axis
+    if (chosenYAxis === "healthcare") {
+        var ylabel = "Lacks Healthcare: ";
+    } 
+    else if (chosenYAxis === "smokes") {
+        var ylabel = "Smokers: "
+    } 
+    else {
+        var ylabel = "Obesity: "
     }
   
     var toolTip = d3.tip()
       .attr("class", "tooltip")
-      .offset([80, -60])
+      .offset([120, -60])
+      .attr("class", "d3-tip")
       .html(function(d) {
-        return (`${d.state}<br>${label} ${d[chosenXAxis]}`);
-      });
+        if (chosenXAxis === "age") {
+            // All yAxis tooltip labels presented and formated as %.
+            // Display Age without format for xAxis.
+            return (`${d.state}<hr>${xlabel} ${d[chosenXAxis]}<br>${ylabel}${d[chosenYAxis]}%`);
+            } 
+            else if (chosenXAxis !== "poverty" && chosenXAxis !== "age") {
+            // Display Income in dollars for xAxis.
+            return (`${d.state}<hr>${xlabel}$${d[chosenXAxis]}<br>${ylabel}${d[chosenYAxis]}%`);
+            } 
+            else {
+            // Display Poverty as percentage for xAxis.
+            return (`${d.state}<hr>${xlabel}${d[chosenXAxis]}%<br>${ylabel}${d[chosenYAxis]}%`);
+            }      
+    });
   
     circlesGroup.call(toolTip);
   
