@@ -189,7 +189,7 @@ d3.csv("assets/data/data.csv").then(function(dData, err) {
     .attr("cy", d => yLinearScale(d[chosenYAxis]))
     .attr("r", 15)
     .classed("stateCircle", true);
-    
+
     // Create circle text.
     var circleText = elemEnter.append("text")            
         .attr("x", d => xLinearScale(d[chosenXAxis]))
@@ -197,3 +197,6 @@ d3.csv("assets/data/data.csv").then(function(dData, err) {
         .attr("dy", ".35em") 
         .text(d => d.abbr)
         .classed("stateText", true);
+
+    // Update tool tip function above csv import.
+    var circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circle, circleText);
